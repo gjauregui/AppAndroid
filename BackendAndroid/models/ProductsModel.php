@@ -60,12 +60,21 @@ class ProductsModel
     {
         $result = false;
         
-        $sql = "INSERT INTO Products VALUES (NULL,'{$this->getName()}',{$this->getPrice()},NULL)";
+        $sqlSave = "INSERT INTO Products VALUES (NULL,'{$this->getName()}',{$this->getPrice()},NULL)";
         
-        $save = $this->con->prepare($sql);
+        $save = $this->con->prepare($sqlSave);
         
         if ($save->execute()) {
-            $result = true;
+
+            $this->setId($this->con->LastInsertId());
+
+            $sqlGet= "SELECT id,name,price FROM Products WHERE id = {$this->getId()}";
+
+            $get = $this->con->prepare($sqlGet);
+
+            if ($get->execute()) {
+                $result = $get->fetchObject();
+            }
         }
         
         return $result;

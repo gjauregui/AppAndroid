@@ -35,11 +35,13 @@ class SalesModel
     }
 
 
-    public function getUser_id(){
+    public function getUser_id()
+    {
         return $this->user_id;
     }
 
-    public function getRepresentative(){
+    public function getRepresentative()
+    {
         return $this->representative;
     }
 
@@ -54,51 +56,61 @@ class SalesModel
         return $this->status_type;
     }
     
-    public function setId($id){
+    public function setId($id)
+    {
         $this->id = $id;
     }
     
-    public function setBussines_name($bussines_name){
+    public function setBussines_name($bussines_name)
+    {
         $this->bussines_name = $bussines_name;
-        
     }
 
-    public function setRuc($ruc){
+    public function setRuc($ruc)
+    {
         $this->ruc = $ruc;
     }
 
-    public function setUser_id($user_id){
+    public function setUser_id($user_id)
+    {
         $this->user_id = $user_id;
     }
 
-    public function setRepresentative($representative){
+    public function setRepresentative($representative)
+    {
         $this->representative = $representative;
     }
 
-    public function setDelete_at($delete_at){
+    public function setDelete_at($delete_at)
+    {
         $this->delete_at = $delete_at;
-        
     }
 
-    public function setStatus_type($status_type){
+    public function setStatus_type($status_type)
+    {
         $this->status_type = $status_type;
     }
 
     public function save()
     {
-      $result = array();
+        $result = false;
 
-      $sql = "INSERT INTO Sales VALUES (NULL,'{$this->getBussines_name()}','{$this->getRuc()}',{$this->getUser_id()},'{$this->getRepresentative()}',NULL,'{$this->getStatus_type()}')";
+        $sqlSave = "INSERT INTO Sales VALUES (NULL,'{$this->getBussines_name()}','{$this->getRuc()}',{$this->getUser_id()},'{$this->getRepresentative()}',NULL,'{$this->getStatus_type()}')";
 
-      $save = $this->con->prepare($sql);
+        $save = $this->con->prepare($sqlSave);
 
-      if($save->execute())
-      {
-          $result = [
-            'id' => $this->con->lastInsertId()
-          ];
-      }
-      return $result;
+        if ($save->execute()) {
+            $this->setId($this->con->lastInsertId());
+
+            $sqlGet = "SELECT id,bussiness_name,ruc,user_id,representative,status_type FROM Sales WHERE id = {$this->getId()} ";
+
+            $get = $this->con->prepare($sqlGet);
+
+            if ($get->execute()) {
+                $result = $get->fetchObject();
+            }
+        }
+        return $result;
     }
 
 
@@ -111,9 +123,7 @@ class SalesModel
         $all = $this->con->prepare($sql);
 
         if ($all->execute()) {
-            
             $result = $all->fetchAll();
-
         }
         return $result;
     }

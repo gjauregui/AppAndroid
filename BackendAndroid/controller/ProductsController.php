@@ -9,16 +9,18 @@ class ProductsController
             $name=$_POST['name'];
             $price=$_POST['price'];
 
+            $json = array();
     
             $objprod = new ProductsModel();
     
             $objprod->setName($name);
             $objprod->setPrice($price);
-
         
-            $save = $objprod->save();
+            $json[] = $objprod->save();
     
-            echo json_encode($save);
+            echo json_encode($json);
+        }else {
+            echo "error";
         }
     }
     
