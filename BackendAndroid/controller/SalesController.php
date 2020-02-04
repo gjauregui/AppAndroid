@@ -7,8 +7,6 @@ class SalesController
     public function save_post()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $json = array();
             
             $bussiness_name=$_POST['bussiness_name'];
             $ruc=$_POST['ruc'];
@@ -24,9 +22,11 @@ class SalesController
             $objSales->setRepresentative($representative);
             $objSales->setStatus_type($status_type);
             
-            $json[] = $objSales->save();
-                 
-            echo json_encode($json);
+            $objSave = $objSales->save();
+            
+            header('Content-Type:Application/json; charset="UTF-8"');
+            
+            echo json_encode($objSave);
         }
     }
     

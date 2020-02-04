@@ -58,14 +58,13 @@ class ProductsModel
     
     public function save()
     {
-        $result = false;
+        $result = array();
         
         $sqlSave = "INSERT INTO Products VALUES (NULL,'{$this->getName()}',{$this->getPrice()},NULL)";
         
         $save = $this->con->prepare($sqlSave);
         
         if ($save->execute()) {
-
             $this->setId($this->con->LastInsertId());
 
             $sqlGet= "SELECT id,name,price FROM Products WHERE id = {$this->getId()}";

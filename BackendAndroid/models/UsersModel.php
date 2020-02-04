@@ -43,63 +43,76 @@ class UsersModel
         return $this->delete_at;
     }
     
-    public function getRol(){
+    public function getRol()
+    {
         return $this->rol;
     }
     
 
-    public function setId($id){
+    public function setId($id)
+    {
         $this->id = $id;
     }
     
-    public function setName($name){
+    public function setName($name)
+    {
         $this->name = $name;
-        
     }
-    public function setUser($user){
+    public function setUser($user)
+    {
         $this->user = $user;
     }
 
-    public function setPass($pass){
-        $this->pass =$pass;       
+    public function setPass($pass)
+    {
+        $this->pass =$pass;
     }
     
-    public function setDelete_at($delete_at){
+    public function setDelete_at($delete_at)
+    {
         $this->delete_at = $delete_at;
-        
     }
     
-    public function setRol($rol){
+    public function setRol($rol)
+    {
         $this->rol = $rol;
     }
     
-    public function save(){
+    public function save()
+    {
+        $result = array();
         
-        $result = false;
+        $sqlSave = "INSERT INTO Users VALUES (NULL,'{$this->getName()}','{$this->getUser()}','{$this->getPass()}',NULL,'{$this->getRol()}')";
         
-        $sql = "INSERT INTO Users VALUES (NULL,'{$this->getName()}','{$this->getUser()}','{$this->getPass()}',NULL,'{$this->getRol()}')";
-        $save = $this->con->prepare($sql);
+        $save = $this->con->prepare($sqlSave);
         
-        if($save->execute()){
-            $result = true;
+        if ($save->execute()) {
+
+            $this->setId($this->con->lastInsertId());
+
+            $sqlGet="SELECT id,name,user,pass,rol FROM Users WHERE id = {$this->getId()}";
+
+            $get = $this->con->prepare($sqlGet);
+
+            if ($get->execute()) {
+                $result = $get->fetchObject();
+            }
         }
-        
         return $result;
-        
     }
 
 
     public function login()
     {
-        $result = false;
+        $result = array();
 
-        $sql = "SELECT id,name,user,pass,rol FROM Users WHERE user ='{$this->getUser()}' and deleted_at is NULL";
-        $login = $this->con->prepare($sql);
+        $sqlGet = "SELECT id,name,user,pass,rol FROM Users WHERE user ='{$this->getUser()}' and deleted_at is NULL";
+        $login = $this->con->prepare($sqlGet);
 
         if ($login->execute()) {
             $objuser = $login->fetchObject();
 
-            if($this->getPass() == $objuser->pass){
+            if ($this->getPass() == $objuser->pass) {
                 $result = $objuser;
             }
         }

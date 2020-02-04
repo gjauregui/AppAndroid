@@ -1,12 +1,12 @@
 <?php
 require_once "models/UsersModel.php";
 
-class UsersController{
-    
-    public function save_post(){
-        
+class UsersController
+{
+    public function save_post()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+
             $name=$_POST['name'];
             $user=$_POST['user'];
             $pass=$_POST['pass'];
@@ -19,22 +19,18 @@ class UsersController{
             $objuser->setPass($pass);
             $objuser->setRol($rol);
             
-            $save = $objuser->save();
-    
+            $objSave = $objuser->save();
+
+            header('Content-Type:Application/json; charset="UTF-8"');
  
-            echo $save;
-    
-    
+            echo json_encode($objSave);
         }
-        
-        
     }
     
     public function login_post()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $json = array();
             $user= $_POST['user'];
             $pass = $_POST['pass'];
 
@@ -42,18 +38,13 @@ class UsersController{
             $objuser->setUser($user);
             $objuser->setPass($pass);
 
-            $object = $objuser->login();
-            $json[]= $object;
-            header('Content-Type:Application/json; charset="utf-8"');
-            echo json_encode($json);
-            
-            
-        }else
-        {
+            $objLogin = $objuser->login();
+
+            header('Content-Type:Application/json; charset="UTF-8"');
+
+            echo json_encode($objLogin);
+        } else {
             echo "error";
         }
     }
-
-
-
 }

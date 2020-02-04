@@ -93,7 +93,7 @@ class SalesModel
 
     public function save()
     {
-        $result = false;
+        $result = array();
 
         $sqlSave = "INSERT INTO Sales VALUES (NULL,'{$this->getBussines_name()}','{$this->getRuc()}',{$this->getUser_id()},'{$this->getRepresentative()}',NULL,'{$this->getStatus_type()}')";
 
@@ -116,7 +116,7 @@ class SalesModel
 
     public function all()
     {
-        $result = false;
+        $result = array();
 
         $sql = "SELECT sl.id, u.name as 'user_name', sl.bussiness_name, sl.status_type,(select sum(t.total) as 'total' from (select (price * quantity) as total, sd.sale_id as sale_id from Sales_detail as sd) as t WHERE t.sale_id = sl.id) as total from Sales as sl, Users as u where sl.user_id = u.id and sl.deleted_at is NULL";
   
