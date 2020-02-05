@@ -10,7 +10,7 @@ class SalesDetailModel
     private $price;
     private $quantity;
     private $con;
-    private $error = true;
+    //private $error = true;
     private $rest = array();
     private $data = null;
 
@@ -79,10 +79,17 @@ class SalesDetailModel
         $this->data = $data;
     }
 
-    public function result($message){
-      
-            $this->rest= [
-                "error"  => $this->error,
+    public function result($error,$message){
+
+        if(!isset($error) ){
+            $error = true;
+        }
+        if(!isset($message)){
+            $message = "Response.error";
+        }
+
+        $this->rest= [
+                "error"  => $error,
                 "message"=> $message,
                 "code" => http_response_code(),
                 "data"   =>$this->getData(),
@@ -91,7 +98,7 @@ class SalesDetailModel
   
     }
     public function save()
-    {   
+    { /*  
         $sqlSave = "INSERT INTO Sales_detail VALUES (NULL,{$this->getSale_id()},{$this->getProd_id()},{$this->getPrice()},{$this->getQuantity()})";
 
         $save = $this->con->prepare($sqlSave);
@@ -119,14 +126,10 @@ class SalesDetailModel
                 }else{
                     $this->result("Response.error");
                 }
-            }else{                
-                $this->result("Response.error");
             }
-        }else{
-            $this->result("Response.error");
         }
 
-        return $this->rest;
+        return $this->rest;*/
     }
 
 
@@ -160,29 +163,23 @@ class SalesDetailModel
                     if(is_object($resultTotal)){
 
                         $this->error = false;
-                        $this->setData([
+                        $this->setData(
                                 array_merge(
                                     (array)$resultCabezera,
                                     ["productos" => $resultBody],
                                     (array)$resultTotal
                                 )
-                            ]);
+                            );
 
-                        $this->result("Response.get");
+                        $this->result(false,"Response.get");
                 
                     }else{
-                        $this->result("Response.error");
+                        $this->result(true,"Response.error");
                     } 
-                }else{
-                    $this->result("Response.error");
-                } 
-            }else{
-                $this->result("Response.error");
+                }
             } 
-        }else{
-            $this->result("Response.error");
-        } 
-
+        }
+            
         return  $this->rest;
     }
     
